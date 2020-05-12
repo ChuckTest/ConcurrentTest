@@ -18,7 +18,7 @@ namespace ConcurrentTestApp
 
         private static void Sleep()
         {
-            Thread.Sleep(SleepTime * 1000);
+            //Thread.Sleep(SleepTime * 1000);
         }
 
         static async Task Main(string[] args)
