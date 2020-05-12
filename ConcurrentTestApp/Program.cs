@@ -23,23 +23,25 @@ namespace ConcurrentTestApp
                 for (int i = 1; i <= 12; i++)
                 {
                     j++;
+                    Task task;
                     if (j == 1)
                     {
-                        TaskList.Add(DoTask1(i));
+                        task = new Task(DoTask1, i);
                     }
                     else if (j == 2)
                     {
-                        TaskList.Add(DoTask2(i));
+                        task = new Task(DoTask1, i);
                     }
                     else if (j == 3)
                     {
-                        TaskList.Add(DoTask3(i));
+                        task = new Task(DoTask1, i);
                         j = 0;
                     }
                     else
                     {
                         throw new Exception();
                     }
+                    TaskList.Add(task);
                 }
 
                 Console.WriteLine($"addSuccessfully.Count = {AddSuccessfully.Count}");
@@ -70,7 +72,7 @@ namespace ConcurrentTestApp
             }
         }
 
-        public static async Task DoTask1(object obj)
+        public static void DoTask1(object obj)
         {
             Console.WriteLine($"DoTask1 with {obj} Thread id = {Thread.CurrentThread.ManagedThreadId}");
             for (int i = 0; i < 100; i++)
@@ -85,7 +87,7 @@ namespace ConcurrentTestApp
             }
         }
 
-        public static async Task DoTask2(object obj)
+        public static void DoTask2(object obj)
         {
             _tryRemoveCount++;
             Console.WriteLine(
@@ -102,7 +104,7 @@ namespace ConcurrentTestApp
             }
         }
 
-        public static async Task DoTask3(object obj)
+        public static void DoTask3(object obj)
         {
             _tryRemoveCount++;
             Console.WriteLine(
