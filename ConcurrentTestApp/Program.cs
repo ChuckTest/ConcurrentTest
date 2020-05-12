@@ -14,7 +14,7 @@ namespace ConcurrentTestApp
         private static readonly List<string> IterateString = new List<string>();
         private static readonly Random Random = new Random();
         private static readonly List<Task> TaskList = new List<Task>();
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             try
             {
@@ -48,7 +48,10 @@ namespace ConcurrentTestApp
                     task.Start();
                 }
 
-                Task.WaitAll(TaskList.ToArray());
+                var resultTask = Task.WhenAll(TaskList.ToArray());
+                await resultTask;
+                //TaskStatus.RanToCompletion means "The task completed execution successfully."
+                Console.WriteLine($"resultTask.Status = {resultTask.Status}");
 
                 Console.WriteLine($"addSuccessfully.Count = {AddSuccessfully.Count}");
                 foreach (var item in AddSuccessfully)
