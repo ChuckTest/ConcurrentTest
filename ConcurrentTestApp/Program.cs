@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ConcurrentTestApp
 {
@@ -13,6 +14,7 @@ namespace ConcurrentTestApp
         private static readonly List<string> IterateString = new List<string>();
         private static int _tryRemoveCount;
         private static readonly Random Random = new Random();
+        private static readonly List<Task> TaskList = new List<Task>();
         static void Main(string[] args)
         {
             try
@@ -21,48 +23,22 @@ namespace ConcurrentTestApp
                 for (int i = 1; i <= 12; i++)
                 {
                     j++;
-                    Thread thread;
                     if (j == 1)
                     {
-                        thread = new Thread(DoTask1);
+                        TaskList.Add(DoTask1(i));
                     }
                     else if (j == 2)
                     {
-                        thread = new Thread(DoTask2);
+                        TaskList.Add(DoTask2(i));
                     }
                     else if (j == 3)
                     {
-                        thread = new Thread(DoTask3);
+                        TaskList.Add(DoTask3(i));
                         j = 0;
                     }
                     else
                     {
                         throw new Exception();
-                    }
-                    thread.IsBackground = false;
-                    thread.Start(i);
-                }
-
-                Console.WriteLine("======");
-                int timeout = 0;
-                while (AddSuccessfully.Count != 100)
-                {
-                    timeout++;
-                    Thread.Sleep(1000);
-                    if (timeout > 5)
-                    {
-                        break;
-                    }
-                }
-
-                timeout = 0;
-                while (_tryRemoveCount != 5)
-                {
-                    timeout++;
-                    Thread.Sleep(1000);
-                    if (timeout > 5)
-                    {
-                        break;
                     }
                 }
 
@@ -94,7 +70,7 @@ namespace ConcurrentTestApp
             }
         }
 
-        public static void DoTask1(object obj)
+        public static async Task DoTask1(object obj)
         {
             Console.WriteLine($"DoTask1 with {obj} Thread id = {Thread.CurrentThread.ManagedThreadId}");
             for (int i = 0; i < 100; i++)
@@ -109,7 +85,7 @@ namespace ConcurrentTestApp
             }
         }
 
-        public static void DoTask2(object obj)
+        public static async Task DoTask2(object obj)
         {
             _tryRemoveCount++;
             Console.WriteLine(
@@ -126,7 +102,7 @@ namespace ConcurrentTestApp
             }
         }
 
-        public static void DoTask3(object obj)
+        public static async Task DoTask3(object obj)
         {
             _tryRemoveCount++;
             Console.WriteLine(
