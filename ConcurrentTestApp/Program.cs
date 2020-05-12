@@ -14,6 +14,13 @@ namespace ConcurrentTestApp
         private static readonly List<string> IterateString = new List<string>();
         private static readonly Random Random = new Random();
         private static readonly List<Task> TaskList = new List<Task>();
+        private static readonly int SleepTime = 10;
+
+        private static void Sleep()
+        {
+            Thread.Sleep(SleepTime * 1000);
+        }
+
         static async Task Main(string[] args)
         {
             try
@@ -83,7 +90,7 @@ namespace ConcurrentTestApp
 
         public static void AddTask(object obj)
         {
-            Console.WriteLine($"AddTask with {obj} Thread id = {Thread.CurrentThread.ManagedThreadId}");
+            Console.WriteLine($"{obj} Thread id = {Thread.CurrentThread.ManagedThreadId} run AddTask");
             for (int i = 0; i < 100; i++)
             {
                 var flag = Dictionary.TryAdd(i, i);
@@ -94,12 +101,14 @@ namespace ConcurrentTestApp
                 }
                 Thread.Sleep(1);
             }
+
+            Sleep();
         }
 
         public static void RemoveTask(object obj)
         {
             Console.WriteLine(
-                $"RemoveTask with {obj} Thread id = {Thread.CurrentThread.ManagedThreadId}, count = {Dictionary.Count}");
+                $"{obj} Thread id = {Thread.CurrentThread.ManagedThreadId} run RemoveTask, count = {Dictionary.Count}");
             var toRemove = Random.Next(0, 100);
             for (int i = 0; i < 100; i++)
             {
@@ -110,17 +119,21 @@ namespace ConcurrentTestApp
                 }
                 Thread.Sleep(1);
             }
+
+            Sleep();
         }
 
         public static void IterateTask(object obj)
         {
             Console.WriteLine(
-                $"IterateTask with {obj} Thread id = {Thread.CurrentThread.ManagedThreadId}, count = {Dictionary.Count}");
+                $"{obj} Thread id = {Thread.CurrentThread.ManagedThreadId} run IterateTask, count = {Dictionary.Count}");
             foreach (var item in Dictionary)
             {
                 IterateString.Add($"IterateTask with {obj} iterate {item.Key} {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}");
                 Thread.Sleep(2);
             }
+
+            Sleep();
         }
     }
 }
